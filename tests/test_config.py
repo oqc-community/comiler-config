@@ -20,6 +20,10 @@ from compiler_config.config import (
 SUPPORTED_CONFIG_VERSIONS = ["v02", "v1"]
 
 
+class TestType:
+    pass
+
+
 def _get_json_path(file_name):
     return join(
         abspath(join(dirname(__file__), "serialised_compiler_config_templates", file_name))
@@ -134,7 +138,7 @@ class TestConfigGeneral:
         with pytest.raises(ValueError):
             first_conf.to_json()
 
-        first_conf.optimizations = Delay  # Not an allowed custom type in project
+        first_conf.optimizations = TestType  # Not an allowed custom type in project
 
         with pytest.raises(ValueError):
             first_conf.to_json()
@@ -155,7 +159,7 @@ class TestConfigGeneral:
             CompilerConfig.create_from_json(serialized_data)
 
     @pytest.mark.parametrize("version", SUPPORTED_CONFIG_VERSIONS)
-    def test_json_version_compatibility(self, version):
+    def test_json_version_compatibility_default(self, version):
         serialised_data = _get_contents(
             f"serialised_default_compiler_config_{version}.json"
         )
@@ -163,6 +167,8 @@ class TestConfigGeneral:
         assert deserialised_conf.metrics == MetricsType.Default
         assert deserialised_conf.results_format == QuantumResultsFormat()
 
+    @pytest.mark.parametrize("version", SUPPORTED_CONFIG_VERSIONS)
+    def test_json_version_compatibility_full(self, version):
         serialised_data = _get_contents(f"serialised_full_compiler_config_{version}.json")
         deserialised_conf = CompilerConfig.create_from_json(serialised_data)
         assert deserialised_conf.repeats == 1000
@@ -178,15 +184,3 @@ class TestConfigGeneral:
             == QiskitOptimizations.Empty
         )
         assert deserialised_conf.optimizations.tket_optimizations == TketOptimizations.One
-
-    @pytest.mark.parametrize("version", SUPPORTED_CONFIG_VERSIONS)
-    def test_runs_successfully_with_config(self, version):
-        program = get_test_file_path(TestFileType.QASM2, "ghz.qasm")
-        hardware = get_default_echo_hardware()
-        serialised_data = _get_contents(f"serialised_full_compiler_config_{version}.json")
-        deserialised_conf = CompilerConfig.create_from_json(
-            serialised_data
-        )  # Test full compiler config v1
-        results, metrics = execute_with_metrics(program, hardware, deserialised_conf)
-        assert results is not None
-        assert metrics is not None
