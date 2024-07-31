@@ -15,7 +15,7 @@ from compiler_config.config import (
     QuantumResultsFormat,
     ResultsFormatting,
     TketOptimizations,
-) 
+)
 
 SUPPORTED_CONFIG_VERSIONS = ["v02", "v1"]
 

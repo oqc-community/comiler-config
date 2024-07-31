@@ -7,6 +7,7 @@ import re
 import sys
 from enum import Enum, Flag, IntEnum, auto
 from typing import List, Optional
+
 from compiler_config.serialiser import json_dumps, json_loads
 
 
@@ -250,7 +251,10 @@ class CompilerConfig:
             self.error_mitigation is not None
             and self.error_mitigation != ErrorMitigationConfig.Empty
         ):
-            if hardware.error_mitigation is None or not hardware.error_mitigation.readout_mitigation:
+            if (
+                hardware.error_mitigation is None
+                or not hardware.error_mitigation.readout_mitigation
+            ):
                 raise ValueError("Error mitigation not calibrated on this device.")
             if ResultsFormatting.BinaryCount not in self.results_format:
                 raise ValueError(

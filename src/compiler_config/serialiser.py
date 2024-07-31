@@ -15,9 +15,7 @@ def json_dumps(*args, serializable_types=None, **kwargs):
     return json.dumps(*args, serializable_types=serializable_types, **kwargs)
 
 
-def json_loads(
-    *args, serializable_types=None, **kwargs
-):
+def json_loads(*args, serializable_types=None, **kwargs):
     kwargs.setdefault("cls", CustomJsonDecoder)
     return json.loads(*args, serializable_types=serializable_types, **kwargs)
 
@@ -27,9 +25,7 @@ def json_dump(*args, serializable_types=None, **kwargs):
     return json.dump(*args, serializable_types=serializable_types, **kwargs)
 
 
-def json_load(
-    *args, serializable_types=None, **kwargs
-):
+def json_load(*args, serializable_types=None, **kwargs):
     kwargs.setdefault("cls", CustomJsonDecoder)
     return json.load(*args, serializable_types=serializable_types, **kwargs)
 
