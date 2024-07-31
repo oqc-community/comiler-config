@@ -17,7 +17,7 @@ from compiler_config.config import (
     TketOptimizations,
 )
 
-SUPPORTED_CONFIG_VERSIONS = ["v02", "v1"]
+SUPPORTED_CONFIG_VERSIONS = ["v02", "v01", "v1"]
 
 
 class TestType:

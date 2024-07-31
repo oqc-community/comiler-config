@@ -50,7 +50,7 @@ class CustomJsonDecoder(JSONDecoder):
             return tuple(obj["$data"])
 
         if self.serializable_types is not None:
-            old_paths = ["scc.compiler.config"]
+            old_paths = ["scc.compiler.config", "qat.purr.compiler.config"]
             for old_path in old_paths:
                 if old_path in obj_type:
                     obj_type = obj_type.replace(old_path, "compiler_config.config")
