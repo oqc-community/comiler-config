@@ -6,7 +6,7 @@ authors = ["jamie <jfriel@oxfordquantumcircuits.com>"]
 readme = "README.md"
 
 packages = [
-    { include = "compiler_config", from = "src/" }
+    { include = "compiler_config" }
 ]
 
 
