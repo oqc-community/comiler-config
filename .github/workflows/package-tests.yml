@@ -1,0 +1,101 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+  pull-requests: write
+
+run-name: Build from ${{ github.ref }}
+
+jobs:
+  formatting-tests:
+    name: Consistency and formatting
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # fail-fast: true
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        python: ["3.10", "3.11", "3.12"]
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Load cached venv
+        id: cached-pip-wheels
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependancies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --sync --with dev
+
+      - name: Formatting tests
+        run: |
+          poetry run black --check .
+          poetry run isort --check .
+          poetry run autoflake --check .
+          poetry run pip-audit --desc
+
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        python: ["3.10", "3.11", "3.12"]
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.x
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Load cached venv
+        id: cached-pip-wheels
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependancies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --sync
+
+      - name: Unit tests
+        run: poetry run pytest

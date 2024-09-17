@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "compiler-config"
+version = "1.0.0"
+description = ""
+authors = ["jamie <jfriel@oxfordquantumcircuits.com>"]
+readme = "README.md"
+
+packages = [
+    { include = "compiler_config" }
+]
+
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<3.13"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+isort = "^5.13.2"
+black = "^24.4.2"
+autoflake = "^2.3.1"
+pip-audit = "^2.7.3"
+
+
+[tool.autoflake]
+remove-all-unused-imports = true
+ignore-init-module-imports = true
+ignore-pass-after-docstring = true
+in-place = true
+recursive = true
+
+[tool.isort]
+py_version = 39
+profile = "black"
+line_length = 92
+known_first_party = ["qat"]
+
+[tool.black]
+line-length = 92
+target-version = ["py38", "py39", "py310"]
+
+[tool.poetry.scripts]
+format-code = "poetry_scripts:format_code"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
