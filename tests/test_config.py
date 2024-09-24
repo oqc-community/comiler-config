@@ -18,8 +18,6 @@ from compiler_config.config import (
     TketOptimizations,
 )
 
-SUPPORTED_CONFIG_VERSIONS = ["v02", "v1"]
-
 
 def test_config_opt_contains():
     opt = Qasm2Optimizations()
