@@ -20,6 +20,7 @@ isort = "^5.13.2"
 black = "^24.4.2"
 autoflake = "^2.3.1"
 pip-audit = "^2.7.3"
+pre-commit = "^3.2.0"
 
 
 [tool.autoflake]
@@ -30,14 +31,14 @@ in-place = true
 recursive = true
 
 [tool.isort]
-py_version = 39
+py_version = 312
 profile = "black"
 line_length = 92
-known_first_party = ["qat"]
+known_first_party = ["compiler_config"]
 
 [tool.black]
 line-length = 92
-target-version = ["py38", "py39", "py310"]
+target-version = ["py310", "py311", "py312"]
 
 [tool.poetry.scripts]
 format-code = "poetry_scripts:format_code"
