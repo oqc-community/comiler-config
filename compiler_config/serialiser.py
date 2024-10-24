@@ -58,7 +58,7 @@ class CustomJsonDecoder(JSONDecoder):
 
             typ = self.serializable_types.get(obj_type)
             if typ is None:
-                raise ValueError(f"Invalid type attempted to be serialized: {obj_type}.")
+                raise ValueError(f"Invalid type attempted to be deserialized: {obj_type}.")
         else:
             typ = _get_type(obj_type)
 
