@@ -5,6 +5,7 @@ from __future__ import annotations
 import inspect
 import re
 import sys
+import warnings
 from enum import Enum, Flag, IntEnum, auto
 from typing import List, Optional
 
@@ -351,6 +352,19 @@ class Tket(OptimizationConfig):
     def minimum(self):
         self.tket_optimizations = TketOptimizations.DefaultMappingPass
         return self
+
+    def __setattr__(self, attr, value):
+        if (
+            isinstance(value, TketOptimizations)
+            and TketOptimizations.GlobalisePhasedX in value
+        ):
+            warnings.warn(
+                "Tket flag TketOptimizations.GlobalisePhasedX has been "
+                "deprecated and will be removed in the next version.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        super().__setattr__(attr, value)
 
     def __contains__(self, item):
         if isinstance(item, TketOptimizations) and item in self.tket_optimizations:
