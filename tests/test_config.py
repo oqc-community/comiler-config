@@ -15,6 +15,7 @@ from compiler_config.config import (
     QiskitOptimizations,
     QuantumResultsFormat,
     ResultsFormatting,
+    Tket,
     TketOptimizations,
 )
 
@@ -171,3 +172,14 @@ def test_json_version_compatibility_full(version):
     )
     assert deserialised_conf.optimizations.qiskit_optimizations == QiskitOptimizations.Empty
     assert deserialised_conf.optimizations.tket_optimizations == TketOptimizations.One
+
+
+@pytest.mark.parametrize("flag", [to for to in TketOptimizations])
+def test_tket_flags(flag):
+    tket = None
+    if flag == TketOptimizations.GlobalisePhasedX:
+        with pytest.warns(DeprecationWarning):
+            tket = Tket(tket_optimization=flag)
+    else:
+        tket = Tket(tket_optimization=flag)
+    assert flag in tket
