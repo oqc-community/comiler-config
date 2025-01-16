@@ -5,7 +5,7 @@ on:
     tags: [ '[0-9]+.[0-9]+.[0-9]+' ]
 jobs:
   check-current-branch:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       branch: ${{ steps.check_step.outputs.branch }}
     steps:
@@ -26,7 +26,7 @@ jobs:
           echo "Branches where this tag exists : $branch."          
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: check-current-branch
     # only run if tag is present on branch 'main'
     if: contains(${{ needs.check-current-branch.outputs.branch }}, 'main')`
@@ -52,7 +52,7 @@ jobs:
       run: poetry build
 
     - name: Store the distribution packages
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: python-package-distributions
         path: dist/
@@ -61,7 +61,7 @@ jobs:
     name: Publish to PyPI
     needs:
     - build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       name: pypi
       url: https://pypi.org/p/qat-config  # Replace <package-name> with your PyPI project name
@@ -85,7 +85,7 @@ jobs:
       and upload them to GitHub Release
     needs:
     - publish-to-pypi
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     permissions:
       contents: write  # IMPORTANT: mandatory for making GitHub Releases
@@ -93,7 +93,7 @@ jobs:
 
     steps:
     - name: Download all the dists
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: python-package-distributions
         path: dist/
@@ -130,7 +130,7 @@ jobs:
     name: Publish to TestPyPI
     needs:
     - build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     env:
       name: testpypi

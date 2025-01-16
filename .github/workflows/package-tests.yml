@@ -19,7 +19,7 @@ jobs:
     strategy:
       # fail-fast: true
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ ubuntu-22.04, macos-latest, windows-latest ]
         python: ["3.10", "3.11", "3.12"]
     defaults:
       run:
@@ -48,7 +48,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependancies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        if: steps.cached-pip-wheels.outputs.cache-hit != 'true'
         run: poetry install --sync --with dev
 
       - name: Formatting tests
@@ -65,7 +65,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ ubuntu-22.04, macos-latest, windows-latest ]
         python: ["3.10", "3.11", "3.12"]
     defaults:
       run:
@@ -94,7 +94,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependancies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        if: steps.cached-pip-wheels.outputs.cache-hit != 'true'
         run: poetry install --sync
 
       - name: Unit tests
